@@ -98,7 +98,8 @@ app.delete('/registros', (req, res) => {
   res.json({ success: true });
 });
 
-const PORT = 80;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
+
