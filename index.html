@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Chunq&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arraiá da Familia</title>
+<style>
+  :root {
+    --titulo: #ffbf35;
+    --texto: #333;
+    --container: #ffc46b;
+    --item: #ffd000;
+    --item-esgotado: #ccc;
+    --fundo: #fff0f6;
+  }
+
+  @media (max-width: 768px) {
+  /* Ajuste os estilos para dispositivos móveis */
+  body {
+    font-size: 1em; /* Ajuste de fonte para telas menores */
+  }
+  
+  /* Outros ajustes de layout específicos para celulares */
+}
+
+
+/* Aplica a fonte Chunq e espaçamento geral ao corpo da página */
+@font-face {
+  font-family: 'Chunq';
+  src: url('fonts/chunq.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: 5px;  
+}
+
+body {
+  font-family: 'Chunq', sans-serif;
+  padding: 2px;           /* Espaço interno geral do site */
+  margin: 0;               /* Remove margem padrão do navegador */
+  line-height: 1.4;        /* Espaçamento entre linhas */
+  letter-spacing: 5px;   /* Espaçamento entre letras */
+  background-color: #fff5f7; /* Exemplo de fundo fofo */
+}
+
+
+
+  body {
+  font-family: 'Chunq', cursive, 'Comic Sans MS', sans-serif;
+  background-image: url('https://i.imgur.com/wsbM1vY.png'); /* URL da imagem */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--texto);
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  background-image: url('https://i.imgur.com/wsbM1vY.png');
+  background-size: cover;             /* Faz a imagem cobrir todo o fundo */
+  background-repeat: no-repeat;       /* Evita que a imagem fique se repetindo */
+  background-position: center center; /* Centraliza a imagem */
+  background-attachment: fixed;       /* Fixa o fundo ao rolar a página */
+}
+
+
+
+  header {
+    background: var(--titulo);
+    color: white;
+    padding: 1.4rem;
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-shadow: 0 0 6px #fff0f6aa;
+    position: relative;
+  }
+
+  /* Adicionando emoji fofo no título */
+  header::after {
+    content: "🎉✨";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.2rem;
+    animation: sparkle 2s infinite ease-in-out;
+  }
+
+  @keyframes sparkle {
+    0%, 100% {opacity: 1; transform: translateY(-50%) scale(1);}
+    50% {opacity: 0.5; transform: translateY(-55%) scale(1.1);}
+  }
+
+  main {
+    max-width: 700px;
+    margin: 1rem auto 3rem;
+    background: var(--container);
+    border-radius: 16px;
+    padding: 1.6rem;
+    box-shadow: 0 8px 20px rgb(255 105 180 / 0.3);
+  }
+
+  .item {
+    background: var(--item);
+    margin: 0.6rem 0;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(255, 105, 180, 0.3);
+  }
+
+  .item:hover:not(.esgotado) {
+    background-color: #ff8fc1;
+    box-shadow: 0 4px 14px #ff69b4aa;
+  }
+
+  .item.esgotado {
+    background: var(--item-esgotado);
+    cursor: not-allowed;
+    color: #999;
+    box-shadow: none;
+  }
+
+  .item.selecionado {
+    box-shadow: 0 0 12px 4px var(--titulo);
+  }
+
+  /* Ícone fofo para item */
+  .item .icon {
+    font-size: 1.8rem;
+    user-select: none;
+    animation: bounce 2s infinite ease-in-out;
+  }
+
+  @keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-6px);}
+  }
+
+  #adminPanel {
+    position: fixed;
+    top: 10px; right: 10px;
+    background: white;
+    border: 2px solid var(--titulo);
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    max-width: 320px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 8px 30px rgba(255, 105, 180, 0.5);
+    font-size: 0.9rem;
+  }
+  #adminPanel h2 {
+    margin-top: 0;
+    color: var(--titulo);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+  #adminToggle {
+    position: fixed;
+    top: 10px; right: 10px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    background: var(--titulo);
+    color: white;
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    text-align: center;
+    line-height: 44px;
+    user-select: none;
+    z-index: 10000;
+    box-shadow: 0 0 8px #ff69b4aa;
+    transition: background-color 0.3s;
+  }
+  #adminToggle:hover {
+    background-color: #ff4c9d;
+    box-shadow: 0 0 12px #ff4c9dcc;
+  }
+
+  label {
+    display: block;
+    margin: 0.5rem 0 0.15rem 0;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="color"], input[type="number"] {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    box-sizing: border-box;
+    border: 2px solid #ff69b4;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Chunq', cursive, sans-serif;
+    transition: border-color 0.3s;
+  }
+  input[type="text"]:focus, input[type="color"]:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: #ff1493;
+    box-shadow: 0 0 8px #ff1493aa;
+  }
+  button {
+    margin-top: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    background: var(--titulo);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  button:hover {
+    background-color: #ff1493;
+    box-shadow: 0 0 15px #ff1493cc;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+    font-family: 'Chunq', cursive, sans-serif;
+  }
+  th, td {
+    border: 1px solid #ffc0cb;
+    padding: 0.5rem;
+    text-align: left;
+  }
+  th {
+    background-color: #ffb6c1;
+    color: white;
+    font-weight: 700;
+  }
+  #registrosTable {
+    font-size: 0.9rem;
+  }
+
+  /* Scrollbar fofinho */
+  #adminPanel::-webkit-scrollbar {
+    width: 8px;
+  }
+  #adminPanel::-webkit-scrollbar-thumb {
+    background: #ff69b4cc;
+    border-radius: 8px;
+  }
+  #adminPanel::-webkit-scrollbar-track {
+    background: #ffe4f1;
+  }
+</style>
+</head>
+<body>
+
+<div id="adminToggle" title="Painel Admin">⚒️</div>
+
+<div id="adminLoginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10001; justify-content:center; align-items:center;">
+  <div style="background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px #ff69b4; text-align:center; max-width:300px;">
+    <h3 style="margin-top:0; color:#ff69b4;">Painel Admin</h3>
+    <p>Digite a senha:</p>
+    <input type="password" id="adminPasswordInput" placeholder="Senha..." style="padding:10px; width:100%; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;" />
+    <div style="display:flex; justify-content:space-between; gap:10px;">
+      <button onclick="verificarSenha()">Entrar</button>
+      <button onclick="cancelarLogin()" style="background:#ccc; color:#333;">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<header id="titulo">Arraiá da Familia</header>
+
+<!-- Primeiro parágrafo com fundo amarelo -->
+<div style="background-color: #ffc46b; padding: 10px 20px; text-align: center; width: 80%; margin: 0 auto; border-radius: 8px;">
+  <p style="font-size: 1.2em; color: #ffffff; margin: 0;">
+    Opa, cê tá bão? Esse ano tem mais uma edição do arraiá da família, e ocê ta convidado pra vir aproveitá com nóis essa belezura de noite 😆
+  </p>
+</div>
+
+<!-- Novo parágrafo em negrito com fundo -->
+<div style="background-color: #ffc46b; padding: 15px 20px; text-align: center; width: 80%; margin: 0 auto; border-radius: 8px; margin-top: 20px;">
+  <p style="font-size: 1.2em; color: #ffffff; margin: 0; font-weight: bold;">
+    Pra ficar organizadin, nóis quer saber qual gostosura ôce vai trazer pro nosso arraiá!<br>
+    <span style="color: #ff0000; font-weight: bold;">Atenção:</span> <span style="color: #ff0000;">Não esquece de trazer a bebida que ocê prefere, junto com a sua gostosura escolhida!</span>
+  </p>
+</div>
+
+<main>
+  <div id="listaItens"></div>
+</main>
+
+<style>
+  /* Responsividade */
+  @media (max-width: 768px) {
+    div {
+      width: 90%; /* Aumenta a largura para dispositivos móveis */
+    }
+    p {
+      font-size: 1.1em; /* Reduz o tamanho da fonte em telas menores */
+    }
+  }
+
+  @media (max-width: 480px) {
+    div {
+      width: 95%; /* Reduz ainda mais a largura em telas muito pequenas */
+    }
+    p {
+      font-size: 1em; /* Ajusta o tamanho da fonte para telas pequenas */
+    }
+  }
+</style>
+
+
+<main>
+  <div id="listaItens"></div>
+</main>
+
+<div id="adminPanel">
+  <h2>Painel Admin</h2>
+  <button id="closeAdmin">Fechar</button>
+
+  <h3>Configurações Gerais</h3>
+  <label for="inputTitulo">Título:</label>
+  <input id="inputTitulo" type="text" />
+
+  <label for="inputFundo">Cor do Fundo (hex):</label>
+  <input id="inputFundo" type="color" />
+
+  <label for="inputCorTitulo">Cor do Título:</label>
+  <input id="inputCorTitulo" type="color" />
+
+  <label for="inputCorTexto">Cor do Texto:</label>
+  <input id="inputCorTexto" type="color" />
+
+  <label for="inputCorContainer">Cor do Container:</label>
+  <input id="inputCorContainer" type="color" />
+
+  <label for="inputCorItem">Cor do Item:</label>
+  <input id="inputCorItem" type="color" />
+
+  <button id="salvarConfig">Salvar Configuração</button>
+
+  <hr />
+
+  <h3>Itens</h3>
+  <label for="novoNome">Nome do Item:</label>
+  <input id="novoNome" type="text" placeholder="Ex: Pipoca" />
+
+  <label for="novoLimite">Limite de Escolhas:</label>
+  <input id="novoLimite" type="number" min="1" value="1" />
+
+  <button id="btnAddItem">Adicionar Item</button>
+
+  <div id="itensAdminList"></div>
+
+  <hr />
+
+  <h3>Registros</h3>
+  <button id="btnLimparRegistros">Limpar Registros</button>
+  <table id="registrosTable">
+    <thead>
+      <tr><th>Nome</th><th>Sobrenome</th><th>Item</th><th>Data</th></tr>
+    </thead>
+    <tbody id="registrosBody"></tbody>
+  </table>
+</div>
+
+<script>
+const apiBase = 'http://localhost:3000';
+
+let itens = [];
+let registros = [];
+let config = {};
+
+const listaItensEl = document.getElementById('listaItens');
+const tituloEl = document.getElementById('titulo');
+const adminToggle = document.getElementById('adminToggle');
+const adminPanel = document.getElementById('adminPanel');
+const closeAdminBtn = document.getElementById('closeAdmin');
+
+const inputTitulo = document.getElementById('inputTitulo');
+const inputFundo = document.getElementById('inputFundo');
+const inputCorTitulo = document.getElementById('inputCorTitulo');
+const inputCorTexto = document.getElementById('inputCorTexto');
+const inputCorContainer = document.getElementById('inputCorContainer');
+const inputCorItem = document.getElementById('inputCorItem');
+
+const salvarConfigBtn = document.getElementById('salvarConfig');
+
+const novoNome = document.getElementById('novoNome');
+const novoLimite = document.getElementById('novoLimite');
+const btnAddItem = document.getElementById('btnAddItem');
+const itensAdminList = document.getElementById('itensAdminList');
+
+const btnLimparRegistros = document.getElementById('btnLimparRegistros');
+const registrosBody = document.getElementById('registrosBody');
+
+let selecionados = {}; // nomeItem: quantidadeEscolhida
+
+// Função que adiciona emoji kawaii na frente do nome do item
+function emojiParaItem(nome) {
+  const emojis = {
+    "pipoca": "🍿",
+    "bolo": "🎂",
+    "suco": "🧃",
+    "brigadeiro": "🍫",
+    "refrigerante": "🥤",
+    "doces": "🍬",
+    "pizza": "🍕",
+    "salgado": "🥐",
+  };
+  const key = nome.toLowerCase();
+  return emojis[key] || "✨";
+}
+
+// Fetch dos dados iniciais
+async function carregarTudo() {
+  [config, itens, registros] = await Promise.all([
+    fetch(apiBase + '/config').then(r => r.json()),
+    fetch(apiBase + '/itens').then(r => r.json()),
+    fetch(apiBase + '/registros').then(r => r.json()),
+  ]);
+  aplicarConfig(config);
+  mostrarItens();
+  mostrarRegistros();
+  popularAdminConfig();
+  popularAdminItens();
+}
+
+// Aplicar cores e título da config
+function aplicarConfig(cfg) {
+  document.documentElement.style.setProperty('--titulo', cfg.cores?.titulo || '#ff69b4');
+  document.documentElement.style.setProperty('--texto', cfg.cores?.texto || '#333');
+  document.documentElement.style.setProperty('--container', cfg.cores?.container || '#fff0f6');
+  document.documentElement.style.setProperty('--item', cfg.cores?.item || '#ffd1e8');
+  tituloEl.textContent = cfg.titulo || 'Festinha da Brubru';
+  if(cfg.fundo) {
+    document.body.style.background = cfg.fundo;
+    // para manter o padrão de bolinhas fofas com opacidade, mesclar com cor selecionada
+    document.body.style.backgroundImage = `
+      radial-gradient(circle at 10% 20%, #ffb6c1 1.5px, transparent 0),
+      radial-gradient(circle at 40% 80%, #ff69b4 2px, transparent 0),
+      radial-gradient(circle at 70% 10%, #ffb6c1 1.5px, transparent 0),
+      radial-gradient(circle at 80% 70%, #ffc0cb 2px, transparent 0)
+    `;
+    document.body.style.backgroundSize = '100px 100px';
+  }
+  else {
+    document.body.style.background = 'var(--fundo, #fff0f6)';
+    document.body.style.backgroundImage = `
+      radial-gradient(circle at 10% 20%, #ffb6c1 1.5px, transparent 0),
+      radial-gradient(circle at 40% 80%, #ff69b4 2px, transparent 0),
+      radial-gradient(circle at 70% 10%, #ffb6c1 1.5px, transparent 0),
+      radial-gradient(circle at 80% 70%, #ffc0cb 2px, transparent 0)
+    `;
+    document.body.style.backgroundSize = '100px 100px';
+  }
+}
+
+// Mostrar lista de itens para usuários escolherem
+function mostrarItens() {
+  listaItensEl.innerHTML = '';
+  selecionados = {}; // resetar seleção ao recarregar itens
+
+  itens.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'item';
+
+    // Emoji fofo na frente do nome
+    const spanEmoji = document.createElement('span');
+    spanEmoji.className = 'icon';
+    spanEmoji.textContent = emojiParaItem(item.nome);
+    div.appendChild(spanEmoji);
+
+    const usado = registros.filter(r => r.item.toLowerCase() === item.nome.toLowerCase()).length;
+    div.appendChild(document.createTextNode(` ${item.nome} (Limite: ${item.limite})`));
+    if (usado >= item.limite) {
+      div.classList.add('esgotado');
+      div.textContent += ' - ESGOTADO';
+    }
+    div.addEventListener('click', () => {
+      if (div.classList.contains('esgotado')) return alert('Item esgotado!');
+      abrirFormularioSelecao(item);
+    });
+    listaItensEl.appendChild(div);
+  });
+}
+
+// Form para escolher nome, sobrenome e confirmar seleção do item
+function abrirFormularioSelecao(item) {
+  const nome = prompt('Digite seu nome:');
+  if (!nome || !nome.trim()) return alert('Nome inválido');
+  const sobrenome = prompt('Digite seu sobrenome:');
+  if (!sobrenome || !sobrenome.trim()) return alert('Sobrenome inválido');
+
+  // Verificar limite
+  const usado = registros.filter(r => r.item.toLowerCase() === item.nome.toLowerCase()).length;
+  if (usado >= item.limite) {
+    alert('Desculpe, este item está esgotado.');
+    mostrarItens();
+    return;
+  }
+
+  // Salvar registro
+  const registro = {
+    nome: nome.trim(),
+    sobrenome: sobrenome.trim(),
+    item: item.nome,
+    data: new Date().toLocaleString()
+  };
+  fetch(apiBase + '/registros', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(registro)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Erro ao salvar seleção');
+    alert(`Você escolheu: ${item.nome} com sucesso! 🎉`);
+    carregarTudo(); // atualizar tudo
+  })
+  .catch(e => alert(e.message));
+}
+
+// ADMIN
+
+// Mostrar painel admin
+adminToggle.addEventListener('click', () => {
+  adminPanel.style.display = 'block';
+  adminToggle.style.display = 'none';
+});
+
+// Fechar painel admin
+closeAdminBtn.addEventListener('click', () => {
+  adminPanel.style.display = 'none';
+  adminToggle.style.display = 'block';
+});
+
+// Popular inputs config no admin
+function popularAdminConfig() {
+  inputTitulo.value = config.titulo || 'Festinha da Brubru';
+  inputFundo.value = rgbToHex(config.fundo) || '#fff0f6';
+  inputCorTitulo.value = config.cores?.titulo || '#ff69b4';
+  inputCorTexto.value = config.cores?.texto || '#333333';
+  inputCorContainer.value = config.cores?.container || '#fff0f6';
+  inputCorItem.value = config.cores?.item || '#ffd1e8';
+}
+
+// Converte rgb(a) para hex simples, para input color
+function rgbToHex(rgb) {
+  if (!rgb) return null;
+  if (rgb[0] === '#') return rgb; // já hex
+  const result = rgb.match(/\d+/g);
+  if (!result) return null;
+  return "#" + result.slice(0,3).map(x => {
+    const hex = parseInt(x).toString(16);
+    return hex.length === 1 ? '0'+hex : hex;
+  }).join('');
+}
+
+// Salvar config nova
+salvarConfigBtn.addEventListener('click', () => {
+  const novaConfig = {
+    titulo: inputTitulo.value.trim() || 'Festinha da Brubru',
+    fundo: inputFundo.value || '#fff0f6',
+    cores: {
+      titulo: inputCorTitulo.value || '#ff69b4',
+      texto: inputCorTexto.value || '#333333',
+      container: inputCorContainer.value || '#fff0f6',
+      item: inputCorItem.value || '#ffd1e8',
+    }
+  };
+  fetch(apiBase + '/config', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(novaConfig)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Erro ao salvar configuração');
+    alert('Configurações salvas com sucesso!');
+    config = novaConfig;
+    aplicarConfig(config);
+  })
+  .catch(e => alert(e.message));
+});
+
+// Adicionar novo item
+btnAddItem.addEventListener('click', () => {
+  const nome = novoNome.value.trim();
+  const limite = parseInt(novoLimite.value);
+  if (!nome) return alert('Digite um nome para o item');
+  if (!limite || limite < 1) return alert('Digite um limite válido (>=1)');
+  const novoItem = { nome, limite };
+  fetch(apiBase + '/itens', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(novoItem)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Erro ao adicionar item');
+    alert('Item adicionado!');
+    novoNome.value = '';
+    novoLimite.value = '1';
+    carregarTudo();
+  })
+  .catch(e => alert(e.message));
+});
+
+// Mostrar lista de itens no admin para editar/excluir
+function popularAdminItens() {
+  itensAdminList.innerHTML = '';
+  if(itens.length === 0) itensAdminList.textContent = 'Nenhum item cadastrado.';
+
+  itens.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.style.marginBottom = '0.6rem';
+
+    div.innerHTML = `
+      <b>${item.nome}</b> (Limite: ${item.limite})
+      <button style="margin-left: 8px;" data-idx="${idx}" class="btnEditar">Editar</button>
+      <button style="margin-left: 4px; background:#ff69b4cc; color:white;" data-idx="${idx}" class="btnExcluir">Excluir</button>
+    `;
+
+    itensAdminList.appendChild(div);
+  });
+
+  // Eventos editar
+  document.querySelectorAll('.btnEditar').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.dataset.idx);
+      const item = itens[idx];
+      const novoNomeItem = prompt('Editar nome:', item.nome);
+      if(!novoNomeItem || !novoNomeItem.trim()) return alert('Nome inválido');
+      const novoLimiteItem = prompt('Editar limite:', item.limite);
+      if(!novoLimiteItem || isNaN(novoLimiteItem) || novoLimiteItem < 1) return alert('Limite inválido');
+
+      const editado = { nome: novoNomeItem.trim(), limite: parseInt(novoLimiteItem) };
+      fetch(apiBase + '/itens/' + encodeURIComponent(item.nome), {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(editado)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Erro ao editar item');
+        alert('Item editado!');
+        carregarTudo();
+      })
+      .catch(e => alert(e.message));
+    };
+  });
+
+  // Eventos excluir
+  document.querySelectorAll('.btnExcluir').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.dataset.idx);
+      const item = itens[idx];
+      if(confirm(`Excluir o item "${item.nome}"?`)) {
+        fetch(apiBase + '/itens/' + encodeURIComponent(item.nome), { method: 'DELETE' })
+        .then(res => {
+          if (!res.ok) throw new Error('Erro ao excluir item');
+          alert('Item excluído!');
+          carregarTudo();
+        })
+        .catch(e => alert(e.message));
+      }
+    };
+  });
+}
+
+// Mostrar registros no admin
+function mostrarRegistros() {
+  registrosBody.innerHTML = '';
+  registros.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.nome}</td><td>${r.sobrenome}</td><td>${r.item}</td><td>${r.data}</td>`;
+    registrosBody.appendChild(tr);
+  });
+}
+
+// Limpar registros
+btnLimparRegistros.addEventListener('click', () => {
+  if(confirm('Tem certeza que quer limpar todos os registros?')) {
+    fetch(apiBase + '/registros', { method: 'DELETE' })
+    .then(res => {
+      if (!res.ok) throw new Error('Erro ao limpar registros');
+      registros = [];
+      mostrarRegistros();
+      mostrarItens();
+    })
+    .catch(e => alert(e.message));
+  }
+});
+
+
+const adminLoginModal = document.getElementById('adminLoginModal');
+const adminPasswordInput = document.getElementById('adminPasswordInput');
+const senhaCorreta = 'admin123';
+
+adminToggle.addEventListener('click', () => {
+  adminLoginModal.style.display = 'flex';
+  adminPanel.style.display = 'none'; // ← Impede que o painel abra sem senha
+});
+
+function verificarSenha() {
+  const senha = adminPasswordInput.value;
+  if (senha === senhaCorreta) {
+    adminLoginModal.style.display = 'none';
+    adminPanel.style.display = 'block';
+    adminToggle.style.display = 'none';
+    adminPasswordInput.value = '';
+  } else {
+    alert('Senha incorreta!');
+    adminPasswordInput.value = '';
+  }
+}
+
+function cancelarLogin() {
+  adminLoginModal.style.display = 'none';
+  adminPasswordInput.value = '';
+}
+
+
+carregarTudo();
+</script>
+
+</body>
+</html>
+
+

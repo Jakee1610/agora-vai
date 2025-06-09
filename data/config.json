@@ -1,0 +1,10 @@
+{
+  "titulo": "ARRAIA DA FAMILIA",
+  "fundo": "#ffffff",
+  "cores": {
+    "titulo": "#ff8800",
+    "texto": "#000000",
+    "container": "#ff8800",
+    "item": "#ffd29e"
+  }
+}
